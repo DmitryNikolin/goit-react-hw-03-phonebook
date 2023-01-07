@@ -7,8 +7,28 @@ import Filter from './Filter/Filter';
 class App extends Component {
   state = {
     contacts: [],
-    filter: ''
+    filter: '',
   };
+
+  componentDidMount() {
+    try {
+      const json = localStorage.getItem('contacts');
+      const contacts = JSON.parse(json);
+
+      if (contacts) {
+        this.setState(() => ({ contacts: contacts }));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  componentDidUpdate(prevState) {
+    if (prevState.contacts !== this.state.contacts) {
+      const json = JSON.stringify(this.state.contacts);
+      localStorage.setItem('contacts', json);
+    }
+  }
 
   handleAddContact = newContact =>
     this.setState(({ contacts }) => ({
